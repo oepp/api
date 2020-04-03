@@ -38,4 +38,24 @@ router.post('/register', function(req,res) {
     }
 });
 
+router.post('/login', function(req,res) {
+    const data = req.body;
+    if(data.username !== "" && data.password !== ""){
+        connection.query('SELECT * FROM user WHERE username = ? AND password = ?', [data.username, data.password], function(error,result,fields){
+            if(result.length>0) {
+                req.session.loggedin = true;
+                req.session.username = data.username;
+                res.status(200).json({ status: 'success', message: "Checked Data!"});
+            }
+            else{
+                res.status(200).json({ status: 'error', message: "Not Correct" });
+            }
+        });
+    }else{
+        res.status(200).json({ status: 'error', message: "Please enter username or password." });
+        
+
+    }
+});
+
 module.exports = router;
