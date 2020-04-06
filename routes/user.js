@@ -3,10 +3,10 @@ const router = express.Router();
 const mysql = require('mysql');
 const validator = require('validator');
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'oepp',
-    database: 'oepp'
+    host: 'remotemysql.com',
+    user: 'HIR5CkeMHt',
+    password: 'RdAzlCRt9X',
+    database: 'HIR5CkeMHt'
 });
 
 connection.connect(function(err) {
