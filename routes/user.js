@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mysql = require('mysql');
 const validator = require('validator');
+const sgMail = require('@sendgrid/mail');
 const connection = mysql.createConnection({
     host: 'remotemysql.com',
     user: 'HIR5CkeMHt',
@@ -25,8 +26,22 @@ router.post('/register', function(req,res) {
                     [data.name, data.surname, data.email, data.username, data.password]
                 ];
                 console.log("Inserting users.");
-                connection.query(sql, [values], function (err, result) {
-                    if (err) throw err;
+                connection.query(sql, [values], async function (err, result) {
+                    if (err){
+                        console.log(err);
+                    }
+
+                    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                    console.log("Api key: " + process.env.SENDGRID_API_KEY);
+                    const msg = {
+                        to: data.email,
+                        from: "nedretcelik97@gmail.com",
+                        subject: "Thanks for Registering.",
+                        text: "Thank you for Registering in OEPP.",
+                        html: '<strong>Thank you for Registering in OEPP</strong>',
+                    };
+                    await sgMail.send(msg);
+
                     console.log("Number of records inserted: " + result.affectedRows);
                     res.status(200).json({ status: 'success', message: "Inserted Data!"});
                 });
@@ -37,6 +52,8 @@ router.post('/register', function(req,res) {
         });
     }
 });
+
+
 
 router.post('/login', function(req,res) {
     const data = req.body;
