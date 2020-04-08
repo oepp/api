@@ -5,9 +5,9 @@ const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
 const connection = mysql.createConnection({
     host: 'remotemysql.com',
-    user: 'HIR5CkeMHt',
-    password: 'RdAzlCRt9X',
-    database: 'HIR5CkeMHt'
+    user: process.env.MYSQL_PASSWORD,
+    password: process.env.USER,
+    database: process.env.MYSQL_DATABASE
 });
 
 connection.connect(function(err) {
