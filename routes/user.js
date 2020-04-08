@@ -4,9 +4,9 @@ const mysql = require('mysql');
 const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
 const connection = mysql.createConnection({
-    host: 'remotemysql.com',
-    user: process.env.MYSQL_PASSWORD,
-    password: process.env.USER,
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE
 });
 
@@ -70,6 +70,27 @@ router.post('/login', function(req,res) {
         });
     }else{
         res.status(200).json({ status: 'error', message: "Please enter username or password." });
+        
+
+    }
+});
+
+router.post('/support', async function(req,res) {
+    const data = req.body;
+    if(data.email !== "" && data.subjectType == "" && data.message !== ""){
+
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                    console.log("Api key: " + process.env.SENDGRID_API_KEY);
+                    const msg = {
+                        to: "nedretcelik97@gmail.com",
+                        from: "nedretcelik97@gmail.com",
+                        subject: data.subjectType,
+                        text: "This message from " + data.email + ". "  + data.message,
+                        html: "This message from " + data.email + ". </br> </br> " + data.message ,
+                    };
+                    await sgMail.send(msg);
+    }else{
+        res.status(200).json({ status: 'error', message: "Please enter email or message." });
         
 
     }
