@@ -11,7 +11,9 @@ const connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-    if (err) throw err;
+    if (err) {
+        console.log("Error " + err);
+    }
     console.log("Connected!");
 });
 
@@ -21,30 +23,36 @@ router.post('/register', function(req,res) {
         if(!validator.isEmail(data.email)){
             res.status(200).json({ status: 'error', message: "Not correct e-mail." });
         }else{
-                const sql = "INSERT INTO user (name, surname, email, username, password) VALUES ?";
-                const values = [
-                    [data.name, data.surname, data.email, data.username, data.password]
-                ];
-                console.log("Inserting users.");
-                connection.query(sql, [values], async function (err, result) {
-                    if (err){
-                        console.log(err);
-                    }
+            connection.query('SELECT * FROM user WHERE username = ? OR email = ?', [data.username, data.email], function(error,result,fields){
+                if(result.length>0) {
+                    res.status(200).json({ status: 'error', message: "Username/Email already exist!"});
+                }else{
+                    const sql = "INSERT INTO user (name, surname, email, username, password) VALUES ?";
+                    const values = [
+                        [data.name, data.surname, data.email, data.username, data.password]
+                    ];
+                    console.log("Inserting users.");
+                    connection.query(sql, [values], async function (err, result) {
+                        if (err){
+                            console.log(err);
+                        }
 
-                    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                    console.log("Api key: " + process.env.SENDGRID_API_KEY);
-                    const msg = {
-                        to: data.email,
-                        from: "nedretcelik97@gmail.com",
-                        subject: "Thanks for Registering.",
-                        text: "Thank you for Registering in OEPP.",
-                        html: '<strong>Thank you for Registering in OEPP</strong>',
-                    };
-                    await sgMail.send(msg);
+                        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                        console.log("Api key: " + process.env.SENDGRID_API_KEY);
+                        const msg = {
+                            to: data.email,
+                            from: "nedretcelik97@gmail.com",
+                            subject: "Thanks for Registering.",
+                            text: "Thank you for Registering in OEPP.",
+                            html: '<strong>Thank you for Registering in OEPP</strong>',
+                        };
+                        await sgMail.send(msg);
 
-                    console.log("Number of records inserted: " + result.affectedRows);
-                    res.status(200).json({ status: 'success', message: "Inserted Data!"});
-                });
+                        console.log("Number of records inserted: " + result.affectedRows);
+                        res.status(200).json({ status: 'success', message: "Inserted Data!"});
+                    });
+                };
+            });
         }
     }else{
         res.status(200).json({
@@ -77,22 +85,22 @@ router.post('/login', function(req,res) {
 
 router.post('/support', async function(req,res) {
     const data = req.body;
-    if(data.email !== "" && data.subjectType == "" && data.message !== ""){
+    if(data.email !== "" && data.subjectType !== "" && data.message !== ""){
+        console.log("Sending email..");
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                    console.log("Api key: " + process.env.SENDGRID_API_KEY);
-                    const msg = {
-                        to: "nedretcelik97@gmail.com",
-                        from: "nedretcelik97@gmail.com",
-                        subject: data.subjectType,
-                        text: "This message from " + data.email + ". "  + data.message,
-                        html: "This message from " + data.email + ". </br> </br> " + data.message ,
-                    };
-                    await sgMail.send(msg);
+        const msg = {
+            to: "nedretcelik97@gmail.com",
+            from: "nedretcelik97@gmail.com",
+            subject: data.subjectType,
+            text: "This message from " + data.email + ". "  + data.message,
+            html: "This message from " + data.email + ". </br> </br> " + data.message ,
+        };
+        const sendEmail = await sgMail.send(msg); 
+        console.log("send email " + sendEmail);
+        res.status(200).json({ status: 'success', message: "Email sent." });
     }else{
         res.status(200).json({ status: 'error', message: "Please enter email or message." });
-        
-
     }
 });
 
