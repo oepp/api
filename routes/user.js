@@ -3,6 +3,9 @@ const router = express.Router();
 const mysql = require('mysql');
 const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
+const mailgun = require("mailgun-js");
+const DOMAIN = process.env.DOMAIN_KEY;
+const mg = mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: DOMAIN});
 const connection = mysql.createConnection({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
@@ -37,16 +40,26 @@ router.post('/register', function(req,res) {
                             console.log(err);
                         }
 
-                        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                        console.log("Api key: " + process.env.SENDGRID_API_KEY);
-                        const msg = {
+                        const emailMsg = {
+                            from: "OEPP <postmaster@sandboxb035355204c840d887be78db5f2d0bc2.mailgun.org>",
                             to: data.email,
-                            from: "nedretcelik97@gmail.com",
                             subject: "Thanks for Registering.",
-                            text: "Thank you for Registering in OEPP.",
-                            html: '<strong>Thank you for Registering in OEPP</strong>',
-                        };
-                        await sgMail.send(msg);
+                            text: "Thank you for Registering in OEPP."
+                    };
+                        mg.messages().send(emailMsg, function (error, body) {
+                            console.log(body);
+                        });
+
+                        // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                        // console.log("Api key: " + process.env.SENDGRID_API_KEY);
+                        // const msg = {
+                        //     to: data.email,
+                        //     from: "nedretcelik97@gmail.com",
+                        //     subject: "Thanks for Registering.",
+                        //     text: "Thank you for Registering in OEPP.",
+                        //     html: '<strong>Thank you for Registering in OEPP</strong>',
+                        // };
+                        // await sgMail.send(msg);
 
                         console.log("Number of records inserted: " + result.affectedRows);
                         res.status(200).json({ status: 'success', message: "Inserted Data!"});
@@ -88,16 +101,26 @@ router.post('/support', async function(req,res) {
     if(data.email !== "" && data.subjectType !== "" && data.message !== ""){
         console.log("Sending email..");
 
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        const msg = {
-            to: "nedretcelik97@gmail.com",
-            from: "nedretcelik97@gmail.com",
+        const emailMsg = {
+            from: "OEPP <postmaster@sandboxb035355204c840d887be78db5f2d0bc2.mailgun.org>",
+            to: data.email,
             subject: data.subjectType,
             text: "This message from " + data.email + ". "  + data.message,
-            html: "This message from " + data.email + ". </br> </br> " + data.message ,
-        };
-        const sendEmail = await sgMail.send(msg); 
-        console.log("send email " + sendEmail);
+    };
+        mg.messages().send(emailMsg, function (error, body) {
+            console.log(body);
+        });
+
+        // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        // const msg = {
+        //     to: "nedretcelik97@gmail.com",
+        //     from: "nedretcelik97@gmail.com",
+        //     subject: data.subjectType,
+        //     text: "This message from " + data.email + ". "  + data.message,
+        //     html: "This message from " + data.email + ". </br> </br> " + data.message ,
+        // };
+        // const sendEmail = await sgMail.send(msg); 
+        // console.log("send email " + sendEmail);
         res.status(200).json({ status: 'success', message: "Email sent." });
     }else{
         res.status(200).json({ status: 'error', message: "Please enter email or message." });
