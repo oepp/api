@@ -23,7 +23,7 @@ app.use(session({
     cookie: { expires: 600000 } 
 }));
 
-app.use("/user", userRoutes); //  http://127.0.0.1:3001/user/register/....
+app.use("/user", userRoutes);
 
 app.set("port", port);
 
