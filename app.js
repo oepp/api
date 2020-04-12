@@ -6,6 +6,7 @@ const app = express();
 require("dotenv").config();
 const cors = require("cors");
 const userRoutes = require("./routes/user");
+const categoryRoutes = require("./routes/category");
 const port = 3001;
 
 
@@ -20,11 +21,11 @@ app.use(session({
     secret: 'somerandonstuffs',
     resave: false, 
     saveUninitialized: false, 
-    cookie: { expires: 600000 } 
+    cookie: { expires: 6000000 } 
 }));
 
 app.use("/user", userRoutes);
-
+app.use("/category",categoryRoutes);
 app.set("port", port);
 
 
