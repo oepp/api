@@ -7,6 +7,7 @@ require("dotenv").config();
 const cors = require("cors");
 const userRoutes = require("./routes/user");
 const categoryRoutes = require("./routes/category");
+const gameRoute = require('./routes/games');
 const port = 3001;
 
 
@@ -26,6 +27,7 @@ app.use(session({
 
 app.use("/user", userRoutes);
 app.use("/category",categoryRoutes);
+app.use("/games",gameRoute);
 app.set("port", port);
 
 

@@ -12,11 +12,11 @@ connection.connect(function(err) {
     if (err) {
         console.log("Error " + err);
     }
-    console.log("Connected!");
+    console.log("Connected Category API!");
 });
 
 router.get('/',(req,res)=>{
-res.send("Hello from Mightiest King Alp Yuksel");
+res.send("Hello Apı Go to Categories for /getCategory");
 });
 router.get('/getCategory',(req,res)=>{
     connection.query(Select_All_Categories,(err,results)=>{
