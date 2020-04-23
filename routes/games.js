@@ -18,7 +18,7 @@ connection.connect(function(err) {
 router.get('/',(req,res)=>{
     res.send("Hello Apı Go to Games for /getGames");
     });
-    router.get('/getGames',(req,res)=>{
+     router.get('/getGames',(req,res)=>{
         connection.query(Select_All_Games,(err,results)=>{
         if(err){
             return res.send(err)
@@ -30,4 +30,17 @@ router.get('/',(req,res)=>{
         }
         })
         });
+        router.get('/getGames/:id',(req, res) => {
+            let sql = Select_All_Games+'WHERE GAMES.CategoryID='+req.params.id;
+            let query = connection.query(sql, (err, results) => {
+             if(err){
+                 return res.send(err)
+             }
+             else{
+                 return res.json({
+                     data:results
+                    })
+             }
+            });
+          });
     module.exports = router;
