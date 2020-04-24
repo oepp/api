@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE
 });
-const Select_All_Games = 'Select GameTitle,GameDescription,GameImage,CategoryName '+
+const Select_All_Games = 'Select idGames,GameTitle,GameDescription,GameImage,CategoryName '+
 'from GAMES JOIN Category ON(GAMES.CategoryID=Category.ID)';
 connection.connect(function(err) {
     if (err) {

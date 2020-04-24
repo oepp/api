@@ -17,7 +17,7 @@ router.get('/',(req,res)=>{
     res.send("Hello Apı Go to Games for /getContents");
     });
 router.get('/getContents/:id',(req, res) => {
-    let sql = 'Select ReleaseTime,Income,GameTitle,username,email from Contents JOIN GAMES ON(Contents.Gameid=GAMES.idGames)JOIN user ON(Contents.usr_id=user.UserID)WHERE Gameid ='+req.params.id;
+    let sql = 'Select ReleaseTime,Income,GameImage,GameDescription,username,email from Contents JOIN GAMES ON(Contents.Gameid=GAMES.idGames)JOIN user ON(Contents.usr_id=user.UserID)WHERE Gameid ='+req.params.id;
     let query = connection.query(sql, (err, results) => {
      if(err){
          return res.send(err)
