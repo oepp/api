@@ -72,6 +72,10 @@ router.post('/login', function(req,res) {
             if(result.length>0) {
                 req.session.loggedin = true;
                 req.session.username = data.username;
+                req.session.UserID = result[0].UserID;
+                req.session.email = result[0].email;
+                req.session.name = result[0].name;
+                req.session.surname = result[0].surname;
                 res.status(200).json({ status: 'success', message: "Checked Data!"});
             }
             else{
@@ -104,6 +108,43 @@ router.post('/support', async function(req,res) {
         res.status(200).json({ status: 'error', message: "Please enter email or message." });
     }
 });
+
+
+router.post('/feedback', async function(req,res) {
+    const data = req.body;
+    if(data.feedbackmessage !== "" && data.gameId !== undefined && data.rating !== undefined){
+        connection.query('SELECT * FROM feedback WHERE feedbackFrom = ? AND gameId = ?', [req.session.UserID, data.gameId], function(error,result,fields){
+            if(result.length>0) {
+                res.status(200).json({ status: 'error', message: "You can only submit one feedback for each course."});
+            }else{
+                const sql = "INSERT INTO feedback (feedbackFrom, feedbackMessage, gameId, rating) VALUES ?";
+                const values = [
+                    [1, data.feedbackmessage, data.gameId, data.rating]
+                ];
+                console.log("Inserting feedback.");
+                connection.query(sql, [values], async function (err, result) {
+                    if (err){
+                        console.log(err);
+                    }
+                })
+            }
+        })
+
+
+        // const emailMsg = {
+        //     from: "OEPP <postmaster@sandboxb035355204c840d887be78db5f2d0bc2.mailgun.org>",
+        //     to: data.email,
+        //     text: "This feedback message from " + data.email + ". "  + data.feedbackmessage,
+        //  };
+        // mg.messages().send(emailMsg, function (error, body) {
+        //     console.log(body);
+        // });
+        res.status(200).json({ status: 'success', message: "Feedback sent." });
+    }else{
+        res.status(200).json({ status: 'error', message: "Please enter feedback message."});
+    }
+});
+
 
 router.post('/forgot/password', function(req,res) {
     const data = req.body;
@@ -173,6 +214,18 @@ router.post('/forgot/confirm/password', function(req,res) {
             status: "error"
         });
     }
+});
+
+router.get('/logout', function(req,res) {
+    if(req.session){
+        req.session.destroy(function(error){
+            const logoutUrl = encodeURI(process.env.APP_URL + "/Login")
+            res.redirect(logoutUrl);
+
+        })
+    }
+
+
 });
 
 module.exports = router;
