@@ -10,20 +10,40 @@ const categoryRoutes = require("./routes/category");
 const gameRoute = require('./routes/games');
 const contentRoute = require('./routes/contents');
 const port = 3001;
+const MySQLStore = require('express-mysql-session')(session);
 
+var storeOptions = {
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
+};
+ 
+var sessionStore = new MySQLStore(storeOptions);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
-app.use(cors());
+const corsOptions = {
+    origin: process.env.APP_URL,
+    credentials: true
+}
+
+app.use(cors(corsOptions));
 
 app.use(session({ 
-    key: 'user_sid',
-    secret: 'somerandonstuffs',
+    key:'oepp2020project',
+    secret: 'somerandonstuffsoepp2020',
+    name: 'oepp2020project',
+    saveUninitialized: false,
     resave: false, 
-    saveUninitialized: false, 
-    cookie: { expires: 6000000 } 
+    rolling: true,
+    store: sessionStore,
+    cookie: { 
+        httpOnly: true,
+        expires: 48000
+    } 
 }));
 
 app.use("/user", userRoutes);
