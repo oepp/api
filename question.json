@@ -1,1 +1,93 @@
-{"description":"Fill in the blanks to declare two variables of type int and display their sum to the screen.","lines":[{"items":[{"text":"int x = 8;","isBlank":false}]},{"items":[{"text":"int","isBlank":true},{"text":" y = 15;","isBlank":false}]},{"items":[{"text":"Console.Writeline(","isBlank":false},{"text":"x","isBlank":true},{"text":"+","isBlank":true},{"text":"y);","isBlank":false}]}]}
+{
+    "q1":{
+    "description": "Esta pregunta es sobre gramática española.",
+    "lines": [
+      {
+        "items": [
+          {
+            "text": "Se",
+            "isBlank": false
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "desperto",
+            "isBlank": true
+          },
+          {
+            "text": "mañana",
+            "isBlank": false
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "Se dio cuenta de que",
+            "isBlank":false
+          },
+          {
+            "text": "era mejor que los",
+            "isBlank": false
+          },
+          {
+            "text": "sabs que ",
+            "isBlank":false
+          },
+          {
+            "text": "despertó",
+            "isBlank": true
+          },
+          {
+            "text": "antes",
+            "isBlank": false
+          }
+        ]
+      }
+    ]
+   },
+   "q2":{
+    "description": "Estas preguntas miden el vocabulario español.",
+    "lines": [
+      {
+        "items": [
+          {
+            "text": "Aeropuerto",
+            "isBlank": true
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "cerca de la playa",
+            "isBlank": false
+          },
+          {
+            "text": "Pero el Valencia es ",
+            "isBlank": false
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "demasiado",
+            "isBlank": false
+          },
+          {
+            "text": "bueno",
+            "isBlank": true
+          },
+          {
+            "text": "para irse esta.",
+            "isBlank": true
+          }
+        ]
+      }
+    ]
+   }
+   
+  }

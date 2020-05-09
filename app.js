@@ -9,7 +9,6 @@ const userRoutes = require("./routes/user");
 const categoryRoutes = require("./routes/category");
 const gameRoute = require('./routes/games');
 const contentRoute = require('./routes/contents');
-const denemeRoute= require('./first')
 const quest = require('./question')
 const port = 3001;
 
@@ -33,7 +32,7 @@ app.use("/category",categoryRoutes);
 app.use("/games",gameRoute);
 app.use("/contents",contentRoute);
 app.use("/questions",quest);
-app.use("/first",denemeRoute)
+
 app.set("port", port);
 
 
