@@ -30,4 +30,18 @@ router.get('/getContents/:id',(req, res) => {
      }
     });
   });
+  router.get('/getPopularGames',(req,res)=>{
+    let sql = 'Select ReleaseTime,Income,GameImage,GameDescription,GameTitle,username,email from Contents '+
+    'JOIN GAMES ON(Contents.Gameid=GAMES.idGames)JOIN user ON(Contents.usr_id=user.UserID)';
+    let query = connection.query(sql, (err, results) => {
+     if(err){
+         return res.send(err)
+     }
+     else{
+         return res.json({
+             data:results
+            })
+     }
+    });
+  })
   module.exports = router;

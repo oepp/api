@@ -1,0 +1,93 @@
+{
+    "q1":{
+    "description": "Esta pregunta es sobre gramática española.",
+    "lines": [
+      {
+        "items": [
+          {
+            "text": "Se",
+            "isBlank": false
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "desperto",
+            "isBlank": true
+          },
+          {
+            "text": "mañana",
+            "isBlank": false
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "Se dio cuenta de que",
+            "isBlank":false
+          },
+          {
+            "text": "era mejor que los",
+            "isBlank": false
+          },
+          {
+            "text": "sabs que ",
+            "isBlank":false
+          },
+          {
+            "text": "despertó",
+            "isBlank": true
+          },
+          {
+            "text": "antes",
+            "isBlank": false
+          }
+        ]
+      }
+    ]
+   },
+   "q2":{
+    "description": "Estas preguntas miden el vocabulario español.",
+    "lines": [
+      {
+        "items": [
+          {
+            "text": "Aeropuerto",
+            "isBlank": true
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "cerca de la playa",
+            "isBlank": false
+          },
+          {
+            "text": "Pero el Valencia es ",
+            "isBlank": false
+          }
+        ]
+      },
+      {
+        "items": [
+          {
+            "text": "demasiado",
+            "isBlank": false
+          },
+          {
+            "text": "bueno",
+            "isBlank": true
+          },
+          {
+            "text": "para irse esta.",
+            "isBlank": true
+          }
+        ]
+      }
+    ]
+   }
+   
+  }

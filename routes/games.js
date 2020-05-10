@@ -14,7 +14,7 @@ const connection = mysql.createPool({
 });
 const Select_All_Games = 'Select idGames,GameTitle,GameDescription,GameImage,CategoryName '+
 'from GAMES JOIN Category ON(GAMES.CategoryID=Category.ID)';
-
+const Select_GameFile ='Select GameTitle,GameDescription,CategoryID,GameFile,GameType from GAMES JOIN Questions On(GAMES.QuestionID=Questions.IdQuestion) WHERE GAMES.QuestionID IS NOT NULL AND Questions.GameType =';
 // connection.connect(function(err) {
 //     if (err) {
 //         console.log("Error " + err);
@@ -23,7 +23,7 @@ const Select_All_Games = 'Select idGames,GameTitle,GameDescription,GameImage,Cat
 // });
 
 router.get('/',(req,res)=>{
-    res.send("Hello Apı Go to Games for /getGames");
+    res.send("Hello Api Go to Games for /getGames");
     });
      router.get('/getGames',(req,res)=>{
         connection.query(Select_All_Games,(err,results)=>{
@@ -50,7 +50,19 @@ router.get('/',(req,res)=>{
              }
             });
           });
-       
+          router.get('/getGameFile/:id',(req,res)=>{
+            let sql = Select_GameFile+req.params.id;
+            let query = connection.query(sql, (err, results) => {
+                if(err){
+                    return res.send(err)
+                }
+                else{
+                    return res.json({
+                        data:results
+                       })
+                }
+               });
+          })
           router.post('/addGame', function(req,res) {
             const data = req.body;
             if(data.GameTitle !== "" && data.GameDescription !== "" && data.GameImage !== null && data.CategoryID !== 0 ){
