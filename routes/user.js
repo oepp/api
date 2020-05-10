@@ -142,18 +142,18 @@ router.post('/feedback', async function(req,res) {
 });
 
 
-router.post('/forgot/password', function(req,res) {
+router.post('/forgot/password', async function(req,res) {
     const data = req.body;
     if(data.email !== ""){
         if(!validator.isEmail(data.email)){
             res.status(200).json({ status: 'error', message: "Not correct e-mail." });
         }else{
-            connection.query('SELECT * FROM user WHERE email = ?', [data.email], function(error,result,fields){
+            await connection.query('SELECT * FROM user WHERE email = ?', [data.email], async function(error,result,fields){
                 if(result.length>0) {
                     const sql = "UPDATE user SET passwordResetCode = ? WHERE email = ?";
                     console.log("Updating users.");
                     const resetCode = Math.random().toString().slice(2);
-                    connection.query(sql, [resetCode,data.email], async function (err, result) {
+                    await connection.query(sql, [resetCode,data.email], async function (err, result) {
                         if (err){
                             console.log(err);
                         }
@@ -243,12 +243,65 @@ router.get('/profile', async function(req, res) {
     }
 })
 
+router.get('/profile/contents', async function(req, res) {
+    if (req.session === undefined || !req.session.loggedin) {
+        return res.status(401).send({ status: "error", message: "Not logged in" });
+    } else {
+        const contents = [];
+        await connection.query('SELECT c.*, g.* FROM Contents c LEFT JOIN GAMES g ON c.Gameid = g.idGames WHERE c.usr_id = ?', [req.session.UserID], function(error,result,fields){
+            if (result && result.length > 0) {
+                console.log(result);
+                for (let i=0; i < result.length; i++) {
+                    const temp = {
+                        id: result[i].Gameid,
+                        course: result[i].GameTitle,
+                        income: result[i].Income
+                    }
+                    contents.push(temp);
+                }
+            }
+
+            return res.status(200).send({ status: "success", data: contents })
+        });
+    }
+})
+
+router.post('/profile', async function(req, res) {
+    const data = req.body;
+    if (req.session === undefined || !req.session.loggedin) {
+        return res.status(401).send({ status: "error", message: "Not logged in" });
+    } else {
+        const params = [
+            data.name, data.surname, data.email, data.username, data.email
+        ];
+
+        await connection.query('UPDATE user SET name = ?, surname = ?, email = ?, username = ? WHERE email = ?', params, async function(error,result,fields){
+            if (result && result.affectedRows && result.affectedRows === 1) {
+                let retMsg = "Updated user successfully.";
+                if (data.password !== "") {
+                    await connection.query('UPDATE user SET password = ? WHERE email = ?', [data.password, data.email], function(error,result,fields){
+                        console.log("Updating password");
+                        if (result && result.affectedRows && result.affectedRows === 1) {
+                            retMsg += " Password updated.";
+                        }
+                        return res.status(200).send({ status: "success", message: retMsg })
+                    });
+                } else {
+                    return res.status(200).send({ status: "success", message: retMsg })
+                }
+            }else {
+                return res.status(200).send({ status: "error", message: "User data not updated" });
+            }
+        });
+    }
+});
+
 router.get('/feedback/list', async function(req, res) {
     if (req.session === undefined || !req.session.loggedin) {
         return res.status(401).send({ status: "error", message: "Not logged in" });
     } else {
         const feedbackList = [];
-        connection.query('SELECT f.*, g.* FROM feedback f LEFT JOIN GAMES g ON f.gameId = g.idGames', [], function(error,result,fields){
+        await connection.query('SELECT f.*, g.* FROM feedback f LEFT JOIN GAMES g ON f.gameId = g.idGames', [], function(error,result,fields){
             if (result.length > 0) {
                 for (let i = 0; i < result.length; i++) {
                     const temp = {
