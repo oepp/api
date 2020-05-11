@@ -15,13 +15,27 @@ const connection = mysql.createPool({
 const Select_All_Games = 'Select idGames,GameTitle,GameDescription,GameImage,CategoryName '+
 'from GAMES JOIN Category ON(GAMES.CategoryID=Category.ID)';
 const Select_GameFile ='Select GameTitle,GameDescription,CategoryID,GameFile,GameType from GAMES JOIN Questions On(GAMES.QuestionID=Questions.IdQuestion) WHERE GAMES.QuestionID IS NOT NULL AND Questions.GameType =';
+const Select_GameFile_ById = 'Select idGames,GameTitle,GameDescription,CategoryID,GameFile,GameType from GAMES JOIN Questions On(GAMES.QuestionID=Questions.IdQuestion) WHERE GAMES.QuestionID IS NOT NULL AND Questions.GameType =1 AND GAMES.idGames=';
 // connection.connect(function(err) {
 //     if (err) {
 //         console.log("Error " + err);
 //     }
 //     console.log("Connected Games API!");
 // });
-
+router.get('/getPopularGames',(req,res)=>{
+    let sql = 'Select ReleaseTime,idGames,GameImage,GameDescription,GameTitle,username,email from Contents '+
+    'JOIN GAMES ON(Contents.Gameid=GAMES.idGames)JOIN user ON(Contents.usr_id=user.UserID)';
+    let query = connection.query(sql, (err, results) => {
+     if(err){
+         return res.send(err)
+     }
+     else{
+         return res.json({
+             data:results
+            })
+     }
+    });
+  })
 router.get('/',(req,res)=>{
     res.send("Hello Api Go to Games for /getGames");
     });
@@ -39,6 +53,19 @@ router.get('/',(req,res)=>{
         });
         router.get('/getGames/:id',(req, res) => {
             let sql = Select_All_Games+'WHERE GAMES.CategoryID='+req.params.id;
+            let query = connection.query(sql, (err, results) => {
+             if(err){
+                 return res.send(err)
+             }
+             else{
+                 return res.json({
+                     data:results
+                    })
+             }
+            });
+          });
+          router.get('/getGameFileByID/:id',(req, res) => {
+            let sql = Select_GameFile_ById+req.params.id;
             let query = connection.query(sql, (err, results) => {
              if(err){
                  return res.send(err)
