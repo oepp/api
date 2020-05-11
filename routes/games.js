@@ -22,7 +22,7 @@ const Select_GameFile_ById = 'Select idGames,GameTitle,GameDescription,CategoryI
 //     }
 //     console.log("Connected Games API!");
 // });
-router.get('/getPopularGames',(req,res)=>{
+router.get('/infos/popular',(req,res)=>{
     let sql = 'Select ReleaseTime,idGames,GameImage,GameDescription,GameTitle,username,email from Contents '+
     'JOIN GAMES ON(Contents.Gameid=GAMES.idGames)JOIN user ON(Contents.usr_id=user.UserID)';
     let query = connection.query(sql, (err, results) => {
@@ -64,7 +64,7 @@ router.get('/',(req,res)=>{
              }
             });
           });
-          router.get('/getGameFileByID/:id',(req, res) => {
+          router.get('/files/:id',(req, res) => {
             let sql = Select_GameFile_ById+req.params.id;
             let query = connection.query(sql, (err, results) => {
              if(err){
