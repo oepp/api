@@ -17,6 +17,9 @@ const connection = mysql.createPool({
 router.post('/register', function(req,res) {
     const data = req.body;
     if(data.name !== "" && data.surname !== "" && data.email !== "" && data.username !== "" && data.password !== ""){
+        if(data.password !== data.confirmpassword){
+            return res.status(200).json({ status: 'error', message: "Password not matching!"});
+        }
         if(!validator.isEmail(data.email)){
             res.status(200).json({ status: 'error', message: "Not correct e-mail." });
         }else{
@@ -55,8 +58,6 @@ router.post('/register', function(req,res) {
         });
     }
 });
-
-
 
 router.post('/login', function(req,res) {
     const data = req.body;
@@ -101,6 +102,7 @@ router.post('/support', async function(req,res) {
         res.status(200).json({ status: 'error', message: "Please enter email or message." });
     }
 });
+
 
 
 router.post('/feedback', async function(req,res) {
