@@ -73,12 +73,12 @@ router.get('/getContents/:id',(req, res) => {
         });
     }
 })
-router.post('/content/add',function(req,res){
+router.post('/add',function(req,res){
     const data = req.body;
             if(data.Gameid !== "" && data.usr_id !== "" && data.ReleaseTime !== "" && data.Income !== 0 ){
-                    connection.query('SELECT * FROM Contents WHERE Gameid = ? AND idContent= ?', [data.Gameid, data.idContent], function(error,result,fields){
+                    connection.query('SELECT * FROM Contents WHERE Gameid = ?', [data.Gameid], function(error,result,fields){
                         if(result.length>0) {
-                            res.status(200).json({ status: 'error', message: "An error occured"});
+                            res.status(401).json({ status: 'error', message: "An error occured"});
                         }else{
                             const sql = "INSERT INTO Contents (ReleaseTime, Income, Gameid, usr_id) VALUES ?";
                             const values = [
@@ -90,15 +90,6 @@ router.post('/content/add',function(req,res){
                                     console.log(err);
                                 }
         
-                                const emailMsg = {
-                                    from: "OEPP <postmaster@sandboxb035355204c840d887be78db5f2d0bc2.mailgun.org>",
-                                    to: data.email,
-                                    subject: "Thanks for Adding game in our storage.",
-                                    text: "Your game succesfully added."
-                            };
-                                mg.messages().send(emailMsg, function (error, body) {
-                                    console.log(body);
-                                });
                                 console.log("Number of records inserted: " + result.affectedRows);
                                 res.status(200).json({ status: 'success', message: "Inserted Data!"});
                             });

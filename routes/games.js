@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mysql = require('mysql');
 const sgMail = require('@sendgrid/mail');
+const fs = require('fs')
 const mailgun = require("mailgun-js");
 const DOMAIN = process.env.DOMAIN_KEY;
 const mg = mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: DOMAIN});
