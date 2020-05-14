@@ -90,7 +90,7 @@ router.post('/support', async function(req,res) {
 
         const emailMsg = {
             from: "OEPP <postmaster@sandboxb035355204c840d887be78db5f2d0bc2.mailgun.org>",
-            to: data.email,
+            to: "nedretcelik97@gmail.com",
             subject: data.subjectType,
             text: "This message from " + data.email + ". "  + data.message,
     };
